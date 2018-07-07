@@ -13,14 +13,15 @@ tags:
 
 # 用Go打造区块链（2）——工作证明机制（PoW）
 
-这一系列的文章是由[Ivan Kuznetsov](https://link.zhihu.com/?target=https%3A//jeiwan.cc/)所写，第一篇文章的翻译稿由[李笑来](https://www.zhihu.com/people/xiaolai/activities)在其公众号学习学习再学习首发，本人觉得是一个结合Go语言学习区块链技术的好资料，后面将用自己的语言翻译一遍，从第一篇开始，顺便对Go语言以及区块链有一个初步的认识。
+这一系列的文章是由[Ivan Kuznetsov][1]所写，第一篇文章的翻译稿由[李笑来][2]在其公众号学习学习再学习首发，本人觉得是一个结合Go语言学习区块链技术的好资料，后面将用自己的语言翻译一遍，从第一篇开始，顺便对Go语言以及区块链有一个初步的认识。
 
 ## 1 介绍
 
-在[前面一篇文章](http://frankliu624.me/2018/07/03/BlockChain-Go%E6%89%93%E9%80%A0%E5%8C%BA%E5%9D%97%E9%93%BE(1)/)当中我们构建了一个简单的但却是区块链数据库的核心的数据结构。同时，我们也实现了向该数据库当中添加链式关系（chain-like relation）区块的方法：每一个区块都链接到它的前一个区块。令人遗憾的是，我们所实现的区块链有一个致命缺陷：添加新的区块太容易，成本也太低。区块和比特币的重要基本特征之一就是添加新的区块是一项非常难的工作。今天我们将处理完善这个缺陷。
+在[前面一篇文章][3]当中我们构建了一个简单的但却是区块链数据库的核心的数据结构。同时，我们也实现了向该数据库当中添加链式关系（chain-like relation）区块的方法：每一个区块都链接到它的前一个区块。令人遗憾的是，我们所实现的区块链有一个致命缺陷：添加新的区块太容易，成本也太低。区块和比特币的重要基本特征之一就是添加新的区块是一项非常难的工作。今天我们将处理完善这个缺陷。
 
 本项目part_2的目录结构为：
-![tree](https://res.cloudinary.com/flhonker/image/upload/v1530879206/githubio/go/goBlockChain/blockchain_part1-tree.png)
+
+![tree][4]
 
 ## 2 工作证明（Proof-of-Work）
 
@@ -42,7 +43,7 @@ tags:
 2. 特定数据只能有唯一的哈希值，哈希值是独一无二的。
 3. 即便只是修改输入数据的一个字节，也会导致完全不同的哈希值。
 
-![hash原理](https://res.cloudinary.com/flhonker/image/upload/v1530880143/githubio/go/goBlockChain/blockchain_part2-hash.jpg)
+![hash原理][5]
 
 哈希函数被广泛应用于检验数据的一致性。一些软件提供商除了软件包以外会额外发布软件包对应的哈希检验值。在你下载了软件包以后可以将其代入一个哈希函数看生成的哈希值与软件商所提供的是否一致。
 
@@ -50,7 +51,7 @@ tags:
 
 ## 4 Hashcash算法
 
-关于哈希值的计算，比特币采用[Hashcash算法](https://link.zhihu.com/?target=https%3A//en.wikipedia.org/wiki/Hashcash)，一种最早用于垃圾邮件过滤的带PoW机制的算法。它可以分解为以下的几个步骤：
+关于哈希值的计算，比特币采用[Hashcash算法][6]，一种最早用于垃圾邮件过滤的带PoW机制的算法。它可以分解为以下的几个步骤：
 
 采用一些公开数据（在邮件过滤当中，比如接收者的邮箱地址；在比特币当中，区块头部数据）
 给它加一个计数器（counter）。计数器从0开始计数
@@ -64,7 +65,7 @@ tags:
 
 为了证明这个算法，我以前面例子当中的数据（“I like donuts”）为例并产生前面三个字节为0开头的哈希值：
 
-![hashcah](https://res.cloudinary.com/flhonker/image/upload/v1530880307/githubio/go/goBlockChain/blockchain_part2-hashcash.jpg)
+![hashcah][7]
 
 ca07ca是计数器的十六进制数，对应的十进制数为13240266。
 
@@ -304,4 +305,18 @@ Our blockchain is a step closer to its actual architecture: adding blocks now re
 1. [Full source codes](https://github.com/Jeiwan/blockchain_go/tree/part_2)
 2. [Blockchain hashing algorithm](https://en.bitcoin.it/wiki/Block_hashing_algorithm)
 3. [Proof of work](https://en.bitcoin.it/wiki/Proof_of_work)
-4. [Hashcash](https://en.bitcoin.it/wiki/Hashcash)
+4. [Hashcash][6]
+
+[1]:https://link.zhihu.com/?target=https%3A//jeiwan.cc/
+
+[2]:https://www.zhihu.com/people/xiaolai/activities
+
+[3]:http://frankliu624.me/2018/07/03/BlockChain-Go%E6%89%93%E9%80%A0%E5%8C%BA%E5%9D%97%E9%93%BE(1)/		"last post"
+
+[4]:https://res.cloudinary.com/flhonker/image/upload/v1530879206/githubio/go/goBlockChain/blockchain_part2-tree.png	  "tree img"
+
+[5]:https://res.cloudinary.com/flhonker/image/upload/v1530880143/githubio/go/goBlockChain/blockchain_part2-hash.jpg	  "hash img"
+
+[6]:https://en.wikipedia.org/wiki/Hashcash	"hashcash"
+
+[7]:https://res.cloudinary.com/flhonker/image/upload/v1530880307/githubio/go/goBlockChain/blockchain_part2-hashcash.jpg	"hashcash img"
