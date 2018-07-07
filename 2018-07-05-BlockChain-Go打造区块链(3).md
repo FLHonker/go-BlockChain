@@ -102,7 +102,7 @@ func (b *Block) Serialize() []byte {
 	encoder := gob.NewEncoder(&result)
 
 	err := encoder.Encode(b)
-    logErr(err)
+	logErr(err)
 
 	return result.Bytes()
 }
@@ -208,7 +208,7 @@ if b == nil {
 	tip = b.Get([]byte("l"))
 }
 ```
-这段代码是整个函数的核心，这里我们获取了用于存储区块的 bucket：假如它已经存在，我们读取它的 “l”值；如果还不存在，我们创建创始区块，创建 bucket，将创始区块保存到新建的 bucket当红，然后将“l”值更新为区块链当中最近区块的哈希值。
+这段代码是整个函数的核心，这里我们获取了用于存储区块的 bucket：假如它已经存在，我们读取它的 “l”值；如果还不存在，我们创建创始区块，创建 bucket，将创始区块保存到新建的 bucket当中，然后将“l”值更新为区块链当中最近区块的哈希值。
 
 特别注意到创建 Blockchain 的新方式：
 ```go
@@ -362,11 +362,12 @@ func (cli *CLI) Run() {
 }
 ```
 我们使用Go语言的标准库当中的 flag 包来做命令行的词法分析。
-
+```go
 addBlockCmd := flag.NewFlagSet("addblock", flag.ExitOnError)
 printChainCmd := flag.NewFlagSet("printchain", flag.ExitOnError)
 addBlockData := addBlockCmd.String("data", "", "Block data")
-首先，我们创建两个子命令，addblock 和 printchain，然后在前面一个命令当中加入 -data 参数。printchain 命令不带任何参数。
+```
+首先，我们创建两个子命令，addblock 和 printchain，然后在前面一个命令当中加入 `-data` 参数。printchain 命令不带任何参数。
 ```
 switch os.Args[1] {
 case "addblock":
