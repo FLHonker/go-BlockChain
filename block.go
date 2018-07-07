@@ -1,6 +1,10 @@
 package main
 
-import "time"
+import (
+	"time"
+	"bytes"
+	"encoding/gob"
+)
 
 //区块
 type Block struct {
@@ -20,7 +24,7 @@ type Block struct {
 //	b.Hash = hash[:]	//det hash
 //}
 
-//创建区块
+// 创建区块
 func NewBlock(data string, prevBlockHash []byte) *Block {
 	block := &Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}, 0}
 	//block.SetHash()	//废弃,由下面的代替
@@ -32,4 +36,24 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 	block.Nonce = nonce
 
 	return block
+}
+
+// 序列化
+func (b *Block) Serialize() []byte {
+	var result bytes.Buffer
+	encoder := gob.NewEncoder(&result)
+	err := encoder.Encode(b)
+	logErr(err)
+
+	return result.Bytes()
+}
+
+// 反序列化
+func DeseralizeBlock(d []byte) *Block {
+	var block Block
+	decoder := gob.NewDecoder(bytes.NewReader(d))
+	err := decoder.Decode(&block)
+	logErr(err)
+
+	return &block
 }

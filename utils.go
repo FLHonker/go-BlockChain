@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/binary"
-	"log"
 	"bytes"
+	"log"
 )
 
 // IntToHex converts an int64 to a byte array
@@ -15,4 +15,11 @@ func IntToHex(num int64) []byte {
 	}
 
 	return buff.Bytes()
+}
+
+//log err
+func logErr(err error)  {
+	if err != nil {
+		log.Panic(err)
+	}
 }
