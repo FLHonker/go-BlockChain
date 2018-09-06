@@ -36,7 +36,7 @@ func (pow *ProofOfWork) prepareData(nonce int) []byte {
 	data := bytes.Join(
 		[][]byte{
 			pow.block.PrevBlockHash,
-			pow.block.Data,
+			pow.block.HashTransactions(),
 			IntToHex(pow.block.Timestamp),
 			IntToHex(int64(targetBits)),
 			IntToHex(int64(nonce)),
@@ -53,7 +53,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	var hash [32]byte
 	nonce := 0			//counter
 
-	fmt.Printf("Mining the block containing \"%s\"\n", pow.block.Data)
+	fmt.Printf("Mining a new block...\n")
 	for nonce < maxNonce {
 		data := pow.prepareData(nonce)	//1.准备数据
 		hash = sha256.Sum256(data)		//2.用SHA-256算法计算该数据的哈希值
@@ -61,7 +61,6 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 		hashInt.SetBytes(hash[:])		//3.将哈希值转换成Big整型数据
 
 		if hashInt.Cmp(pow.target) == -1 {	//4.将转换后的哈希值与target进行比较
-
 			break
 		} else {
 			nonce++

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/sha256"
 	"time"
 	"bytes"
 	"encoding/gob"
@@ -9,7 +10,7 @@ import (
 //区块
 type Block struct {
 	Timestamp 		int64	//当前时间戳
-	Data 			[]byte	//数据
+	Transactions	[]*Transaction	//交易记录
 	PrevBlockHash	[]byte	//前一个区块的hash值
 	Hash			[]byte	//当前区块的hash值
 	Nonce         	int		//nonce计数器存储为block的一部分，要用于手工的验证
@@ -25,8 +26,8 @@ type Block struct {
 //}
 
 // 创建区块
-func NewBlock(data string, prevBlockHash []byte) *Block {
-	block := &Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}, 0}
+func NewBlock(transactions []*Transaction, prevBlockHash []byte) *Block {
+	block := &Block{time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0}
 	//block.SetHash()	//废弃,由下面的代替
 	// Pow
 	pow := NewProofOfWork(block)
@@ -36,6 +37,24 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 	block.Nonce = nonce
 
 	return block
+}
+
+// NewGenesisBlock creates and returns genesis Block
+func NewGenesisBlock(coinbase *Transaction) *Block {
+	return NewBlock([]*Transaction{coinbase}, []byte{})
+}
+
+// HashTransactions returns a hash of the transactions in the block
+func (b *Block) HashTransactions() []byte {
+	var txHashes [][]byte
+	var txHash [32]byte
+
+	for _, tx := range b.Transactions {
+		txHashes = append(txHashes, tx.ID)
+	}
+	txHash = sha256.Sum256(bytes.Join(txHashes, []byte{}))
+
+	return txHash[:]
 }
 
 // 序列化
