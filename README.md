@@ -26,4 +26,4 @@
 [11]:https://github.com/FLHonker/go-BlockChain/blob/part_3/2018-07-03-BlockChain-Go%E6%89%93%E9%80%A0%E5%8C%BA%E5%9D%97%E9%93%BE(1).md
 [12]:https://github.com/FLHonker/go-BlockChain/blob/part_2/2018-07-04-BlockChain-Go%E6%89%93%E9%80%A0%E5%8C%BA%E5%9D%97%E9%93%BE(2).md
 [13]:https://github.com/FLHonker/go-BlockChain/blob/part_3/2018-07-05-BlockChain-Go%E6%89%93%E9%80%A0%E5%8C%BA%E5%9D%97%E9%93%BE(3).md
-[14]:https://github.com/FLHonker/go-BlockChain/blob/part_3/2018-07-05-BlockChain-Go%E6%89%93%E9%80%A0%E5%8C%BA%E5%9D%97%E9%93%BE(4).md
+[14]:https://github.com/FLHonker/go-BlockChain/blob/part_4/2018-07-06-BlockChain-Go%E6%89%93%E9%80%A0%E5%8C%BA%E5%9D%97%E9%93%BE(4).md
