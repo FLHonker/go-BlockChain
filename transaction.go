@@ -9,6 +9,7 @@ import (
 	"encoding/hex"
 )
 
+// 币基交易值，即创世区块获得的奖励
 const subsidy = 10
 
 // Transaction represents a Bitcoin transaction
@@ -43,9 +44,7 @@ func (tx *Transaction) SetID() {
 
 	enc := gob.NewEncoder(&encoded)
 	err := enc.Encode(tx)
-	if err != nil {
-		log.Panic(err)
-	}
+	logErr(err)
 	hash = sha256.Sum256(encoded.Bytes())
 	tx.ID = hash[:]
 }
@@ -76,15 +75,16 @@ func NewCoinbaseTX(to, data string) *Transaction {
 
 // NewUTXOTransaction creates a new transaction
 func NewUTXOTransaction(from, to string, amount int, bc *BlockChain) *Transaction {
-	var inputs	[]TXInput
-	var outputs	[]TXOutput
+	var inputs []TXInput
+	var outputs []TXOutput
 
 	acc, validOutputs := bc.FindSpendableOutputs(from, amount)
+
 	if acc < amount {
-		log.Panic("ERROR: Not enough funds.")
+		log.Panic("ERROR: Not enough funds")
 	}
 
-	//Build a list of inputs
+	// Build a list of inputs
 	for txid, outs := range validOutputs {
 		txID, err := hex.DecodeString(txid)
 		logErr(err)
@@ -95,10 +95,10 @@ func NewUTXOTransaction(from, to string, amount int, bc *BlockChain) *Transactio
 		}
 	}
 
-	//Build a list of outputs
+	// Build a list of outputs
 	outputs = append(outputs, TXOutput{amount, to})
 	if acc > amount {
-		outputs = append(outputs, TXOutput{acc - amount, from}) //a change
+		outputs = append(outputs, TXOutput{acc - amount, from}) // a change
 	}
 
 	tx := Transaction{nil, inputs, outputs}

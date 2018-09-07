@@ -9,7 +9,7 @@ import (
 
 const dbFile = "blockchain.db"
 const blocksBucket = "blocks"
-const genesisCoinbaseData = "The Times 06/Sep/2018 Chancellor on brink of second bailout for banks"
+const genesisCoinbaseData = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
 
 //区块链
 type BlockChain struct {
@@ -55,10 +55,13 @@ func (bc *BlockChain) FindUnspentTransactions(address string) []Transaction {
 	var unspentTXs []Transaction
 	spentTXOs := make(map[string][]int)
 	bci := bc.Iterator()
+
 	for {
 		block := bci.Next()
+
 		for _, tx := range block.Transactions {
 			txID := hex.EncodeToString(tx.ID)
+
 		Outputs:
 			for outIdx, out := range tx.Vout {
 				// Was the output spent?
@@ -79,7 +82,7 @@ func (bc *BlockChain) FindUnspentTransactions(address string) []Transaction {
 				for _, in := range tx.Vin {
 					if in.CanUnlockOutputWith(address) {
 						inTxID := hex.EncodeToString(in.Txid)
-						spentTXOs[inTxID] = append(spentTXOs[inTxID])
+						spentTXOs[inTxID] = append(spentTXOs[inTxID], in.Vout)
 					}
 				}
 			}
@@ -89,8 +92,10 @@ func (bc *BlockChain) FindUnspentTransactions(address string) []Transaction {
 			break
 		}
 	}
+
 	return unspentTXs
 }
+
 
 // FindUTXO finds and returns all unspent transaction outputs
 func (bc *BlockChain) FindUTXO(address string) []TXOutput {
