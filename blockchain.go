@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/boltdb/bolt"
-	"log"
 	"os"
 )
 
@@ -186,9 +185,7 @@ func NewBlockchain(address string) *BlockChain {
 		return nil
 	})
 
-	if err != nil {
-		log.Panic(err)
-	}
+	logErr(err)
 
 	bc := BlockChain{tip, db}
 
@@ -204,37 +201,26 @@ func CreateBlockchain(address string) *BlockChain {
 
 	var tip []byte
 	db, err := bolt.Open(dbFile, 0600, nil)
-	if err != nil {
-		log.Panic(err)
-	}
+	logErr(err)
 
 	err = db.Update(func(tx *bolt.Tx) error {
 		cbtx := NewCoinbaseTX(address, genesisCoinbaseData)
 		genesis := NewGenesisBlock(cbtx)
 
 		b, err := tx.CreateBucket([]byte(blocksBucket))
-		if err != nil {
-			log.Panic(err)
-		}
+		logErr(err)
 
 		err = b.Put(genesis.Hash, genesis.Serialize())
-		if err != nil {
-			log.Panic(err)
-		}
+		logErr(err)
 
 		err = b.Put([]byte("l"), genesis.Hash)
-		if err != nil {
-			log.Panic(err)
-		}
+		logErr(err)
 		tip = genesis.Hash
 
 		return nil
 	})
 
-	if err != nil {
-		log.Panic(err)
-	}
-
+	logErr(err)
 	bc := BlockChain{tip, db}
 
 	return &bc

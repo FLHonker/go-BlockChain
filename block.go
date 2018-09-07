@@ -16,19 +16,9 @@ type Block struct {
 	Nonce         	int		//nonce计数器存储为block的一部分，要用于手工的验证
 }
 
-/* 从part_2开始废弃使用，已在NewBlock()中重新设置 */
-//func (b *Block) SetHash() {
-//	timestamp := []byte(strconv.FormatInt(b.Timestamp, 10))
-//	headers := bytes.Join([][]byte{b.PrevBlockHash, b.Data, timestamp}, []byte{})
-//	hash := sha256.Sum256(headers)
-//
-//	b.Hash = hash[:]	//det hash
-//}
-
 // 创建区块
 func NewBlock(transactions []*Transaction, prevBlockHash []byte) *Block {
 	block := &Block{time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0}
-	//block.SetHash()	//废弃,由下面的代替
 	// Pow
 	pow := NewProofOfWork(block)
 	nonce, hash := pow.Run()

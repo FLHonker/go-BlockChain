@@ -12,7 +12,7 @@ var (
 	maxNonce = math.MaxInt64
 )
 
-//设置挖矿（区块产生）的难度：
+//设置挖矿（区块产生）的难度：数值越大，挖矿难度越大
 const targetBits = 24
 
 //proof of work
