@@ -266,14 +266,17 @@ func (out *TXOutput) CanBeUnlockedWith(unlockingData string) bool {
 下一步-寻找含有未花费输出的交易记录-实现起来非常的难：
 ```go
 // FindUnspentTransactions 返回一组包含未花费的产出的交易
-func (bc *BlockChain) FindUnspentTransactions(address string) []Transaction {
+func (bc *Blockchain) FindUnspentTransactions(address string) []Transaction {
 	var unspentTXs []Transaction
 	spentTXOs := make(map[string][]int)
 	bci := bc.Iterator()
+
 	for {
 		block := bci.Next()
+
 		for _, tx := range block.Transactions {
 			txID := hex.EncodeToString(tx.ID)
+
 		Outputs:
 			for outIdx, out := range tx.Vout {
 				// Was the output spent?
@@ -294,7 +297,7 @@ func (bc *BlockChain) FindUnspentTransactions(address string) []Transaction {
 				for _, in := range tx.Vin {
 					if in.CanUnlockOutputWith(address) {
 						inTxID := hex.EncodeToString(in.Txid)
-						spentTXOs[inTxID] = append(spentTXOs[inTxID])
+						spentTXOs[inTxID] = append(spentTXOs[inTxID], in.Vout)
 					}
 				}
 			}
@@ -304,6 +307,7 @@ func (bc *BlockChain) FindUnspentTransactions(address string) []Transaction {
 			break
 		}
 	}
+
 	return unspentTXs
 }
 ```
